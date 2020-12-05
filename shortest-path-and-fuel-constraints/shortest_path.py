@@ -12,12 +12,13 @@ MAX_FUEL = 4
 START_CITY = "A"
 END_CITY = "H"
 
-# Initialize Variables and Define Update Functions
+# Initialize Variables
 shortest_time_to = defaultdict(lambda: float("inf"))
 fuel_at = defaultdict(lambda: 0)
 shortest_time_to["A"] = 0
 fuel_at["A"] = 4
 
+# Define Update Function
 def update_shortest_path(city):
     for neighbor in GRAPH[city]:
         time_to_neighbor = float("inf") if time_betn(neighbor, city) > MAX_FUEL else time_betn(neighbor, city)

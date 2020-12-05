@@ -11,11 +11,11 @@ MAX_FUEL = 4
 START_CITY = "A"
 END_CITY = "H"
 
-# Initialize variables and update function
+# Initialize variables
 min_tank_to = defaultdict(lambda: 999)
 min_tank_to[START_CITY] = 0
 
-
+# Define Update Function
 def update_tank(city):
     for neighbor in GRAPH[city]:
         estimated_capacity = max(GRAPH[neighbor][city], min_tank_to[city])
