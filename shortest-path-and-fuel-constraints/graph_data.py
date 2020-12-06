@@ -2,6 +2,7 @@ import os
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import networkx as nx
+import random
 
 # Define Graphs
 def defaultGraph(ret_edges= False):
@@ -14,6 +15,7 @@ def defaultGraph(ret_edges= False):
     edges = [("A", "B", 4), ("E", "B", 3), ("A", "H", 5), ("A", "C", 4), ("C", "E", 10), ("C", "D", 3),
                   ("D", "E", 4), ("F", "B", 4), ("E", "G", 1), ("D", "H", 3), ("G", "H", 1), ("F", "H", 4), ]
 
+    random.shuffle(edges)
     graph = defaultdict( lambda: defaultdict(lambda: float("inf")))
     for s, d, dist in edges:
         graph[s][d], graph[d][s] = dist, dist

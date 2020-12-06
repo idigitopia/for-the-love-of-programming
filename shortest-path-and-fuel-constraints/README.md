@@ -1,4 +1,5 @@
 # Shortest Path and Fuel Constraints
+Requirements: Python 3.8, Matplotlib and Networkx 
 
 ## 1. Shortest Path
 You are given a map of cities and time for travel between them in minutes
@@ -13,10 +14,17 @@ refueling takes R minutes.
 ### Command
 python shortest_path.py
 ### Sample Output 
-Source: A \
-Destination: H \
-Time Taken: 13 \
-Fuel Left: 3
+Source:A \
+Destination:H \
+_ - - - - - - - - - - - - - - - - - - - -  \
+Go to City A with fuel 4,  \
+Go to City B with fuel 0, Refuel \
+Go to City E with fuel 1,  \
+Go to City G with fuel 0, Refuel \
+Go to City H with fuel 3,  \
+_ - - - - - - - - - - - - - - - - - - - - \
+Total time for the trip: 13 
+
 
 
 
@@ -34,6 +42,17 @@ capacity (measured in C minutes) needed to be able to drive from s to t.
 ### Command:
 python min_tank_capacity.py
 ### Sample Output 
-Source: A \
-Destination: H \
-Minimum Tank Capacity Required: 3
+Source:A \
+Destination:H \
+_ - - - - - - - - - - - - - - - - - - - -  \
+Go to City A, tank capacity required:0 \
+Go to City I1, tank capacity required:2 \
+Go to City I2, tank capacity required:2 \
+Go to City I3, tank capacity required:2 \
+Go to City I4, tank capacity required:2 \
+Go to City I5, tank capacity required:2 \
+Go to City I6, tank capacity required:2 \
+Go to City H, tank capacity required:3 \
+_ - - - - - - - - - - - - - - - - - - - - \
+ Minimum Tank required for the trip: 3 
+
