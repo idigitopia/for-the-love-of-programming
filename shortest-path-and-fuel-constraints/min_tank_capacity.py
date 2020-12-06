@@ -6,8 +6,6 @@ GRAPH = longPathGraph()
 
 # Define Problem Statement
 CITIES = list(GRAPH.keys())
-REFILL_TIME = 2
-MAX_FUEL = 4
 START_CITY = "A"
 END_CITY = "H"
 
