@@ -41,6 +41,22 @@ def longPathGraph(ret_edges= False):
     return edges if ret_edges else graph
 
 
+def testGraph1(ret_edges= False):
+    """
+    Defines and returns a graph
+    :return:
+    Graph is a 1 level deep default Dictionary with default=inf
+    Query distance as graph[src][dst] , will be inf if no edges exist.
+    """
+    edges = [("A", "B", 2), ("B", "D", 9), ("D", "E", 7), ("A", "C", 9), ("C", "D", 3) ]
+
+    graph = defaultdict( lambda: defaultdict(lambda: float("inf")))
+    for s, d, dist in edges:
+        graph[s][d], graph[d][s] = dist, dist
+
+    return edges if ret_edges else graph
+
+
 def plotGraph(edges, label):
     if not os.path.exists('graph_plots'):
         os.makedirs('graph_plots')
@@ -60,7 +76,7 @@ if __name__ == "__main__":
     """ Add a line per graph to plot"""
     plotGraph(defaultGraph(ret_edges=True),label="defaultGraph")
     plotGraph(longPathGraph(ret_edges=True),label="longPathGraph")
-
+    plotGraph(testGraph1(ret_edges=True),label="testGraph1")
 
 
 
