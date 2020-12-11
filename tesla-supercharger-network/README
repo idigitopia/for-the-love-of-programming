@@ -1,4 +1,4 @@
-3 Tesla Interview Question.
+# Tesla Supercharger Network Puzzle.
 
 Your objective is to construct a search algorithm to find the minimum time path through the tesla
 network of supercharging stations. Each supercharger will refuel the vehicle at a different rate
