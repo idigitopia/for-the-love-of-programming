@@ -39,8 +39,8 @@ ALL_CITY_STATES_DICT = {c:[CITY_STATE(c,(m-i)*MAXCHARGE/m) for i in range(m+1)] 
 CITY_Neighborrs = {c:[n for n in ALL_CITIES if distance_in_km(c,n)<MAXCHARGE] for c in ALL_CITIES}
 CITY_STATE_GRAPH = defaultdict(def_dict_inf)
 
-if os.path.exists(f"city_state_graph_m{m}.pk"):
-    CITY_STATE_GRAPH = pk.load(open(f"city_state_graph_m{m}.pk","rb"))
+if os.path.exists(f"prebuilt_graphs/city_state_graph_m{m}.pk"):
+    CITY_STATE_GRAPH = pk.load(open(f"prebuilt_graphs/city_state_graph_m{m}.pk","rb"))
 else:
     for c1 in tqdm(ALL_CITIES):
         for c2 in CITY_Neighborrs[c1]:
@@ -51,7 +51,7 @@ else:
                         CITY_STATE_GRAPH[u][v] = (v.charge - u.charge)/u.city.charge_rate # hrs
                     if u.city.name != v.city.name and ceil_to_m(distance)==(u.charge-v.charge):
                         CITY_STATE_GRAPH[u][v] = distance/105 # hrs
-    pk.dump(CITY_STATE_GRAPH,open(f"city_state_graph_m{m}.pk","wb"))
+    pk.dump(CITY_STATE_GRAPH,open(f"prebuilt_graphs/city_state_graph_m{m}.pk","wb"))
 
 print("Graph Creation Complete")
 time_betn = lambda x, y: CITY_STATE_GRAPH[x][y] # hrs
