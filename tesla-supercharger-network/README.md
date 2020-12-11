@@ -48,3 +48,20 @@ Output: Your program’s only output should be a print to std::out of a string i
 		Candidate result: Success, cost was 17.2548
 
 
+### Example Output
+Graph Creation Complete
+Node Count: 5151 Edge Count: 10302
+Search for Approximate Path Complete
+
+Source: Council_Bluffs_IA
+Destination: Cadillac_MI
+
+Go to City Council_Bluffs_IA    with Charge 320.000 \
+Go to City Worthington_MN       with Charge 51.575 , Charge up to 320.000 \
+Go to City Albert_Lea_MN        with Charge 140.287 , Charge up to 175.069 \
+Go to City Onalaska_WI          with Charge 0.000 , Charge up to 90.828 \
+Go to City Mauston_WI           with Charge 0.000 , Charge up to 320.000 \
+Go to City Sheboygan_WI         with Charge 134.684 , Charge up to 196.123 \
+Go to City Cadillac_MI          with Charge 0.000 \
+Total Approximate time for the trip: 17.428835312923873 \
+Total Optimal time for the trip: 16.84375527109261 \
