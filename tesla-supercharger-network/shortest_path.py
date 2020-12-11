@@ -33,7 +33,7 @@ MAXCHARGE = 320 #km
 
 
 # Get New Graph with Discrete charge states, m to set the level of discreteness
-m = 32 # Number of distinct charge states.
+m = 16 # Number of distinct charge states.
 ceil_to_m = lambda x: ceil(ceil((x*m/MAXCHARGE))*MAXCHARGE/m)
 ALL_CITY_STATES_DICT = {c:[CITY_STATE(c,(m-i)*MAXCHARGE/m) for i in range(m+1)] for c in ALL_CITIES}
 CITY_Neighborrs = {c:[n for n in ALL_CITIES if distance_in_km(c,n)<MAXCHARGE] for c in ALL_CITIES}
@@ -89,23 +89,50 @@ for _ in tqdm(range(node_count)):
     _city = get_nearest_unvisited_city()
     visited[_city]= True
     update_shortest_path(_city)
+
+print("Search for Approximate Path Complete")
 # ------------------------------------  PseudoCode End ------------------------------------
 
 
-# Pretty Print Output
+# Pretty Print Output, Calculate True Charging Times.
 candidate_end_cities ={c:t for c, t in shortest_time_to.items() if c.city.name == END_CITY_NAME}
 END_CITY_STATE = min(candidate_end_cities, key = candidate_end_cities.get)
-path = [dest_:=END_CITY_STATE]
-while (came_from_city:=prev_city[dest_]) != "unknown":
-    path.append(came_from_city)
-    dest_ = prev_city[dest_]
+CHECKPOINT = namedtuple("CHECKPOINT", ("city", "reach_with", "charge_to", "prev_city", "next_city"))
+path = [CHECKPOINT(END_CITY_STATE.city, END_CITY_STATE.charge,END_CITY_STATE.charge,  "unknown", "unknown")]
+dest_ =END_CITY_STATE
 
-print(f"Source:{START_CITY_STATE} \nDestination:{END_CITY_STATE}\n {'- ' * 20}")
-print("\n".join([f"Go to City {_city}" for _city in reversed(path)]))
-print(" -" * 20,"\nTotal time for the trip:", shortest_time_to[END_CITY_STATE])
+# Trace Shortest path of city states, and calculate optimal plan
+trace_back = [END_CITY_STATE]
+while (dest_:=prev_city[dest_]) != "unknown":
+    trace_back.append(dest_)
+trace_forward = list(reversed(trace_back))
+path = [CHECKPOINT(START_CITY_STATE.city, reach_with = MAXCHARGE,charge_to = MAXCHARGE,
+                   next_city = trace_forward[1].city, prev_city = "unknown")]
+for i, city_state in enumerate(trace_forward):
+    move_to_new_ciy = path[-1].city.name != trace_forward[i].city.name
+    charged_to_max = trace_forward[i].charge == MAXCHARGE
+    if move_to_new_ciy:
+        dist_ = distance_in_km(path[-1].city, trace_forward[i].city)
+        if path[-1].charge_to != MAXCHARGE:
+            path[-1] = path[-1]._replace(charge_to = dist_)
+        path.append(CHECKPOINT(trace_forward[i].city, reach_with=path[-1].charge_to - dist_, charge_to=0,
+                               next_city=trace_forward[i + 1].city if i < len(trace_forward) - 1 else "unknown",
+                               prev_city=path[-1].city))
+    elif charged_to_max:
+        path[-1] = path[-1]._replace(charge_to=MAXCHARGE)
 
 
+# Pretty Print Output
+print(f"Source: {START_CITY_STATE.city.name} \nDestination: {END_CITY_STATE.city.name}\n {'- ' * 20}")
+time = 0
+for i, checkpoint in enumerate(path):
+    if i<len(path)-1:
+        time += distance_in_km(path[i].city,path[i+1].city)/105 + (path[i].charge_to - path[i].reach_with)/path[i].city.charge_rate
+    print(f"Go to City {checkpoint.city.name.ljust(20)} with Charge {checkpoint.reach_with:.3f}"
+          ,f", Charge up to {checkpoint.charge_to:.3f}" if checkpoint.charge_to > checkpoint.reach_with else "")
+print("Total Approximate time for the trip:", shortest_time_to[END_CITY_STATE])
+print("Total Optimal time for the trip:",time)
 
-# Time Complexity:O((|V|*MAXCHARGE)^2)
+# Time Complexity:O((|V|*m)^2)
 # Where |V| is the total number of cities in the MAP,
 # and |E| is the total number of connecting roads in the MAP
