@@ -1,3 +1,5 @@
+3 Tesla Interview Question.
+
 Your objective is to construct a search algorithm to find the minimum time path through the tesla
 network of supercharging stations. Each supercharger will refuel the vehicle at a different rate
 given in km/hr of charge time. Your route does not have to fully charge at every visited charger,
@@ -46,28 +48,3 @@ Output: Your program’s only output should be a print to std::out of a string i
 		Candidate result: Success, cost was 17.2548
 
 
-You should make the following assumptions:
-
-	The car begins at the start charger with a full charge of 320km
-	The car travels at a constant speed of 105km/hr along great circle routes between chargers
-	The Earth is a sphere of radius 6356.752km
-
-
-Your submission will be run against several start and end chargers and evaluated in terms of the 
-following metrics:
-
-	Path satisfiability (car remains above 0km of range throughout entire trip)
-	Path optimality (total time driving + charging)
-	Coding structure
-	Code clarity
-	Computational cost
-
-
-You should ensure that your submission compiles under gcc 4.8.4 with optimization level 1, for example:
-
-	g++ -std=c++11 -O1 main.cpp network.cpp -o candidate_solution
-
-if your solution includes additional cpp files, include a README file with the appropriate compiler string.
-
-
-The solution needs to be self-contained with just the use of STL algorithms (i.e. do not use off-the-shelf packages).

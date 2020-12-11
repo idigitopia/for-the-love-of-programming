@@ -6,6 +6,7 @@ import pickle as pk
 import os
 from heapdict import heapdict
 
+# Helper functions
 def inf_fxn ():
     return float("inf")
 
@@ -23,13 +24,17 @@ def distance_in_km(city1, city2):
 
 CITY = namedtuple('CITY', ['name','lat','lon', 'charge_rate'])
 CITY_STATE = namedtuple('CITY_STATE', ['city','charge'])
-MAXCHARGE = 320 #km
-ALL_CITIES = [CITY(*d) for d in NetworkSpec]
 
-# Get New Graph with Discrete fuel states
+# Define Problem Statement
+ALL_CITIES = [CITY(*d) for d in NetworkSpec]
+START_CITY_NAME = "Council_Bluffs_IA"
+END_CITY_NAME = "Cadillac_MI"
+MAXCHARGE = 320 #km
+
+
+# Get New Graph with Discrete charge states, m to set the level of discreteness
 m = 32 # Number of distinct charge states.
 ceil_to_m = lambda x: ceil(ceil((x*m/MAXCHARGE))*MAXCHARGE/m)
-ALL_CITY_STATES = [CITY_STATE(c,(m-i)*MAXCHARGE/m) for c in ALL_CITIES for i in range(m+1)]
 ALL_CITY_STATES_DICT = {c:[CITY_STATE(c,(m-i)*MAXCHARGE/m) for i in range(m+1)] for c in ALL_CITIES}
 CITY_Neighborrs = {c:[n for n in ALL_CITIES if distance_in_km(c,n)<MAXCHARGE] for c in ALL_CITIES}
 CITY_STATE_GRAPH = defaultdict(def_dict_inf)
@@ -46,29 +51,27 @@ else:
                         CITY_STATE_GRAPH[u][v] = (v.charge - u.charge)/u.city.charge_rate # hrs
                     if u.city.name != v.city.name and ceil_to_m(distance)==(u.charge-v.charge):
                         CITY_STATE_GRAPH[u][v] = distance/105 # hrs
-
     pk.dump(CITY_STATE_GRAPH,open(f"city_state_graph_m{m}.pk","wb"))
 
 print("Graph Creation Complete")
-print("Node Count:", len(CITY_STATE_GRAPH), "Edge Count:", sum([len(n) for n in CITY_STATE_GRAPH]))
 time_betn = lambda x, y: CITY_STATE_GRAPH[x][y] # hrs
 
-# Get Graph and problem setup
-START_CITY_NAME = "Council_Bluffs_IA"
-END_CITY_NAME = "Cadillac_MI"
 
-# Define Problem Statement
+# Get Start City State
 START_CITY_STATE =[CITY_STATE(CITY(*d),MAXCHARGE) for d in NetworkSpec if d[0]==START_CITY_NAME][0]
+
 # Initialize Variables
+print("Node Count:", node_count:=len(CITY_STATE_GRAPH), "Edge Count:", edge_count:=sum([len(n) for n in CITY_STATE_GRAPH]))
 shortest_time_heap, shortest_time_to = heapdict(), defaultdict(lambda :float('inf'))
 shortest_time_heap[START_CITY_STATE], shortest_time_to[START_CITY_STATE] = 0, 0
 prev_city = defaultdict(lambda: "unknown")
 visited = defaultdict(lambda: False)
+
 # Time complexity calculated for HeapQ implementation of the dictionary.
 def get_nearest_unvisited_city():
    return shortest_time_heap.popitem()[0] if shortest_time_heap else False
 
-# ---------  PseudoCode Start ---------
+# ------------------------------------  PseudoCode Start ------------------------------------
 # Define Update Function
 def update_shortest_path(city):
     for neighbor in CITY_STATE_GRAPH[city]:
@@ -82,13 +85,11 @@ def update_shortest_path(city):
 
 
 # Calculate Shortest Time
-alg_count = 0
-while _city:= get_nearest_unvisited_city():
+for _ in tqdm(range(node_count)):
+    _city = get_nearest_unvisited_city()
     visited[_city]= True
     update_shortest_path(_city)
-    if (alg_count := alg_count+1)%1000 == 0: print(f"{alg_count}/{len(CITY_STATE_GRAPH)}", len(shortest_time_heap))
-
-# ---------  PseudoCode End ---------
+# ------------------------------------  PseudoCode End ------------------------------------
 
 
 # Pretty Print Output
@@ -105,6 +106,6 @@ print(" -" * 20,"\nTotal time for the trip:", shortest_time_to[END_CITY_STATE])
 
 
 
-# Time Complexity:O((|V|+|E|)*log(|V|))
+# Time Complexity:O((|V|*MAXCHARGE)^2)
 # Where |V| is the total number of cities in the MAP,
 # and |E| is the total number of connecting roads in the MAP
